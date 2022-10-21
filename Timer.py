@@ -516,6 +516,7 @@ while not done:
                     shield = False
                     bad_list[i].respawn()
             elif bad_list[i].am == "gold":
+              # add the coin_value += bad_list[i].coin
                 del bad_list[i]
                 create_bad(1)
             else:              
