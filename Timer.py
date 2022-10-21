@@ -5,10 +5,14 @@ import pygame
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
+DARK_GREEN = (0, 100, 0)
 RED = (255, 0, 0)
+PURPLE = (255,0,255)
+DARK_PURPLE = (100,0,100)
 YELLOW = (255,255,0)
 BACKGROUND = (155, 155, 155)
 GOLD = (100, 84, 0)
+GREY = (100, 100, 100)
 
 class Bad():
   
@@ -60,7 +64,6 @@ class Bad():
     def respawn(self):
         global no_bad
         global bad_list
-        global baddy3
 
         self.drawn = False       
         self.direction = random.randrange(1,5)
@@ -139,6 +142,140 @@ class Gold_Bad(Bad):
             
             self.drawn = True
         pygame.draw.rect(screen, GOLD, [self.x, self.y, self.size_x, self.size_y], 0)
+        pygame.draw.rect(screen, YELLOW, [self.x, self.y, self.size_x, self.size_y], 5)
+
+class Armoured_bad(Bad):
+
+    def __init__(self):
+        self.direction = random.randrange(1,5)
+        self.size_x = 50
+        self.size_y = 50
+        self.speed = 1
+        self.x = 0
+        self.y = 0
+        self.drawn = False
+        self.coin = random.randrange(21)
+        self.am = "armoured"
+
+    def draw(self, screen):
+     
+        if self.drawn == False:
+            if self.direction == 1:
+                self.x = 375
+                self.y = -50
+            elif self.direction == 2:
+                self.x = -50
+                self.y = 375
+            elif self.direction == 3:
+                self.x = 375
+                self.y = 850
+            elif self.direction == 4:
+                self.x = 850
+                self.y = 375
+            
+            self.drawn = True
+        pygame.draw.rect(screen, BACKGROUND, [self.x, self.y, self.size_x, self.size_y], 0)
+        pygame.draw.line(screen, GREY, (self.x,self.y), (self.x + self.size_x,self.y + self.size_y),3)
+        pygame.draw.line(screen, GREY, (self.x,self.y+ self.size_y), (self.x + self.size_x,self.y) ,3)
+        pygame.draw.rect(screen, GREY, [self.x, self.y, self.size_x, self.size_y], 5)
+
+class Vortex_bad(Bad):
+
+    def __init__(self):
+        self.direction = random.randrange(1,5)
+        self.size_x = 50
+        self.size_y = 50
+        self.speed = random.randrange(1,4)
+        self.x = 0
+        self.y = 0
+        self.drawn = False
+        self.coin = random.randrange(21)
+        self.am = "vortex"
+
+    def draw(self, screen):
+     
+        if self.drawn == False:
+            if self.direction == 1:
+                self.x = 375
+                self.y = -50
+            elif self.direction == 2:
+                self.x = -50
+                self.y = 375
+            elif self.direction == 3:
+                self.x = 375
+                self.y = 850
+            elif self.direction == 4:
+                self.x = 850
+                self.y = 375
+            
+            self.drawn = True
+        pygame.draw.rect(screen, DARK_PURPLE, [self.x, self.y, self.size_x, self.size_y], 0)
+        pygame.draw.rect(screen, PURPLE, [self.x, self.y, self.size_x, self.size_y], 5)
+
+class Theif_bad(Bad):
+
+    def __init__(self):
+        self.direction = random.randrange(1,5)
+        self.size_x = 50
+        self.size_y = 50
+        self.speed = random.randrange(3,6)
+        self.x = 0
+        self.y = 0
+        self.drawn = False
+        self.coin = random.randrange(21)
+        self.am = "theif"
+
+    def draw(self, screen):
+     
+        if self.drawn == False:
+            if self.direction == 1:
+                self.x = 375
+                self.y = -50
+            elif self.direction == 2:
+                self.x = -50
+                self.y = 375
+            elif self.direction == 3:
+                self.x = 375
+                self.y = 850
+            elif self.direction == 4:
+                self.x = 850
+                self.y = 375
+            
+            self.drawn = True
+        pygame.draw.rect(screen, DARK_GREEN, [self.x, self.y, self.size_x, self.size_y], 0)
+        pygame.draw.rect(screen, YELLOW, [self.x, self.y, self.size_x, self.size_y], 5)
+
+class Scorer_bad(Bad):
+
+    def __init__(self):
+        self.direction = random.randrange(1,5)
+        self.size_x = 50
+        self.size_y = 50
+        self.speed = random.randrange(3,6)
+        self.x = 0
+        self.y = 0
+        self.drawn = False
+        self.coin = random.randrange(21)
+        self.am = "scorer"
+
+    def draw(self, screen):
+     
+        if self.drawn == False:
+            if self.direction == 1:
+                self.x = 375
+                self.y = -50
+            elif self.direction == 2:
+                self.x = -50
+                self.y = 375
+            elif self.direction == 3:
+                self.x = 375
+                self.y = 850
+            elif self.direction == 4:
+                self.x = 850
+                self.y = 375
+            
+            self.drawn = True
+        pygame.draw.rect(screen, RED, [self.x, self.y, self.size_x, self.size_y], 0)
         pygame.draw.rect(screen, YELLOW, [self.x, self.y, self.size_x, self.size_y], 5)
 
 pygame.init()
@@ -291,6 +428,7 @@ font = pygame.font.Font('freesansbold.ttf',50,)
 text_x = 30
 text_y = 700
 score_value = 0
+score_counter = 0
 coin_x = 640
 coin_y = 50
 coin_value = 0
@@ -311,32 +449,84 @@ def show_cost(x,y):
     screen.blit(cost, (x, y))
 
 bad_list = []
-baddy = 0
-baddy2 = 0
-baddy3 = 0
 bomb_limit = 1
 bad_limit = 4
-gold = 0
+special = 0
+type = 0
 
 def create_bad(number):
     global bad_list
-    global baddy
-    global baddy2
-    global baddy3
     global bomb_limit
-    global gold
+    global special
+    global type
+    global score_value
 
-    gold = random.randrange(1,8)
+
+    if score_value >= 200:
+        special = random.randrange(1,4)
+    elif score_value >= 100:
+        special = random.randrange(1,7)
+    else:
+        special = random.randrange(1,11)
 
     for i in range(number):
         if len(bad_list) <= bad_limit:
-            if gold == 1:
-                baddy3 = Gold_Bad()
-                bad_list.append(baddy3)
-                gold = random.randrange(1,8)            
+            if special == 1:
+                type = random.randrange(1,6)
+                if type == 1:
+                    baddy3 = Gold_Bad()
+                    bad_list.append(baddy3)
+                    if score_value >= 200:
+                        special = random.randrange(1,4)
+                    elif score_value >= 100:
+                        special = random.randrange(1,7)
+                    else:
+                        special = random.randrange(1,11)
+
+                elif type == 2:
+                    baddy4 = Armoured_bad()
+                    bad_list.append(baddy4)
+                    if score_value >= 200:
+                        special = random.randrange(1,4)
+                    elif score_value >= 100:
+                        special = random.randrange(1,7)
+                    else:
+                        special = random.randrange(1,11)
+
+                elif type == 3:
+                    baddy5 = Vortex_bad()
+                    bad_list.append(baddy5)
+                    if score_value >= 200:
+                        special = random.randrange(1,4)
+                    elif score_value >= 100:
+                        special = random.randrange(1,7)
+                    else:
+                        special = random.randrange(1,11) 
+
+                elif type == 4:
+                    baddy6 = Theif_bad()
+                    bad_list.append(baddy6)
+                    if score_value >= 200:
+                        special = random.randrange(1,4)
+                    elif score_value >= 100:
+                        special = random.randrange(1,7)
+                    else:
+                        special = random.randrange(1,11) 
+
+                elif type == 5:
+                    baddy7 = Scorer_bad()
+                    bad_list.append(baddy7)
+                    if score_value >= 200:
+                        special = random.randrange(1,4)
+                    elif score_value >= 100:
+                        special = random.randrange(1,7)
+                    else:
+                        special = random.randrange(1,11)
+
             else:
                 baddy = Bad()
                 bad_list.append(baddy)
+
         elif len(bad_list) >= bad_limit and len(bad_list) <= bad_limit + bomb_limit:
             baddy2 = Bomb()
             bad_list.append(baddy2)
@@ -515,19 +705,130 @@ while not done:
                 else:
                     shield = False
                     bad_list[i].respawn()
+
             elif bad_list[i].am == "gold":
+                score_value += 1 
+                score_counter += 1
+                coin_value += bad_list[i].coin
                 del bad_list[i]
                 create_bad(1)
+                if score_counter >= 50:
+                    bad_limit += 1
+                    score_counter = 0
+
+            elif bad_list[i].am == "vortex":
+                score_value += 1 
+                score_counter += 1
+                coin_value += bad_list[i].coin
+                del bad_list[i]
+                create_bad(1)
+                if score_counter >= 50:
+                    bad_limit += 1
+                    score_counter = 0
+
+            elif bad_list[i].am == "theif":
+                score_value += 1 
+                score_counter += 1
+                coin_value += bad_list[i].coin
+                del bad_list[i]
+                create_bad(1)
+                if score_counter >= 50:
+                    bad_limit += 1
+                    score_counter = 0
+
+            elif bad_list[i].am == "scorer":
+                score_value += 1 
+                score_counter += 1
+                coin_value += bad_list[i].coin
+                del bad_list[i]
+                create_bad(1)
+                if score_counter >= 50:
+                    bad_limit += 1
+                    score_counter = 0
+
+            elif bad_list[i].am == "armoured":
+                del bad_list[i]
+                create_bad(1)
+                player_health -= 1
+                if player_health <= 0:
+                    done = True
+                    print("Your final score was:", score_value)
+
             else:              
                 bad_list[i].respawn()
                 score_value += 1 
-                coin_value += bad_list[i].coin      
+                coin_value += bad_list[i].coin
+                if score_counter >= 50:
+                    bad_limit += 1
+                    score_counter = 0      
 
         if detect_hitbox_end(bad_list[i].x, bad_list[i].y, bad_list[i].size_x, 400, 400, bad_list, triangle_direction):
             if bad_list[i].am == "bomb":
                 bad_list[i].respawn()
                 score_value += 1 
-                coin_value += bad_list[i].coin                
+                coin_value += bad_list[i].coin 
+                if score_counter >= 50:
+                    bad_limit += 1
+                    score_counter = 0 
+
+            elif bad_list[i].am == "armoured":
+                if shield == False:  
+                    del bad_list[i]
+                    create_bad(1)
+                    player_health -= 1
+                    if player_health <= 0:
+                        done = True
+                        print("Your final score was:", score_value)
+                else:
+                    shield = False
+                    del bad_list[i]
+                    create_bad(1)
+
+            elif bad_list[i].am == "vortex":
+                if shield == False: 
+                    del bad_list[i]
+                    create_bad(1)
+                    player_health -= 3
+                    if player_health <= 0:
+                        done = True
+                        print("Your final score was:", score_value)
+                else:
+                    shield = False
+                    del bad_list[i]
+                    create_bad(1)  
+
+            elif bad_list[i].am == "theif": 
+                if shield == False: 
+                    del bad_list[i]
+                    create_bad(1)
+                    coin_value -= random.randrange(5,46)
+                else:
+                    shield = False
+                    del bad_list[i]
+                    create_bad(1)
+
+            elif bad_list[i].am == "scorer": 
+                if shield == False: 
+                    del bad_list[i]
+                    create_bad(1)
+                    score_value -= random.randrange(5,16)
+                else:
+                    shield = False
+                    del bad_list[i]
+                    create_bad(1)
+
+            elif bad_list[i].am == "gold":
+                if shield == False:
+                    del bad_list[i]
+                    create_bad(1)
+                    player_health -= 1
+                    if player_health <= 0:
+                        done = True
+                        print("Your final score was:", score_value)
+                else:
+                    shield = False
+                    del bad_list[i]
+                    create_bad(1)                                          
             else:
                 if shield == False:
                     bad_list[i].respawn()
