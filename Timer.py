@@ -8,6 +8,7 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 YELLOW = (255,255,0)
 BACKGROUND = (155, 155, 155)
+GOLD = (100, 84, 0)
 
 class Bad():
   
@@ -58,6 +59,8 @@ class Bad():
 
     def respawn(self):
         global no_bad
+        global bad_list
+        global baddy3
 
         self.drawn = False       
         self.direction = random.randrange(1,5)
@@ -67,7 +70,8 @@ class Bad():
         self.rand_g = random.randrange(256)
         self.rand_b = random.randrange(256)
         self.colour = (self.rand_r, self.rand_g, self.rand_b)
-        self.coin = random.randrange(21)
+        if self.am != "gold":
+            self.coin = random.randrange(21)   
         if no_bad == False:
             if new_bad == 1:
                 create_bad(1)
@@ -104,7 +108,38 @@ class Bomb(Bad):
         pygame.draw.circle(screen,BACKGROUND,[self.x + 25, self.y + 25],25)
         pygame.draw.circle(screen,YELLOW,[self.x + 25, self.y + 25],25, 5)
 
+class Gold_Bad(Bad):
 
+    def __init__(self):
+        self.direction = random.randrange(1,5)
+        self.size_x = 50
+        self.size_y = 50
+        self.speed = random.randrange(1,6)
+        self.x = 0
+        self.y = 0
+        self.drawn = False
+        self.coin = 50
+        self.am = "gold"
+
+    def draw(self, screen):
+     
+        if self.drawn == False:
+            if self.direction == 1:
+                self.x = 375
+                self.y = -50
+            elif self.direction == 2:
+                self.x = -50
+                self.y = 375
+            elif self.direction == 3:
+                self.x = 375
+                self.y = 850
+            elif self.direction == 4:
+                self.x = 850
+                self.y = 375
+            
+            self.drawn = True
+        pygame.draw.rect(screen, GOLD, [self.x, self.y, self.size_x, self.size_y], 0)
+        pygame.draw.rect(screen, YELLOW, [self.x, self.y, self.size_x, self.size_y], 5)
 
 pygame.init()
 
@@ -278,21 +313,31 @@ def show_cost(x,y):
 bad_list = []
 baddy = 0
 baddy2 = 0
+baddy3 = 0
 bomb_limit = 1
 bad_limit = 4
+gold = 0
 
 def create_bad(number):
     global bad_list
     global baddy
     global baddy2
+    global baddy3
     global bomb_limit
+    global gold
 
-    if len(bad_list) <= bad_limit:
-        for i in range(number):
-            baddy = Bad()
-            bad_list.append(baddy)
-    elif len(bad_list) >= bad_limit and len(bad_list) <= bad_limit + bomb_limit:
-        for i in range(number):
+    gold = random.randrange(1,8)
+
+    for i in range(number):
+        if len(bad_list) <= bad_limit:
+            if gold == 1:
+                baddy3 = Gold_Bad()
+                bad_list.append(baddy3)
+                gold = random.randrange(1,8)            
+            else:
+                baddy = Bad()
+                bad_list.append(baddy)
+        elif len(bad_list) >= bad_limit and len(bad_list) <= bad_limit + bomb_limit:
             baddy2 = Bomb()
             bad_list.append(baddy2)
 
@@ -470,6 +515,9 @@ while not done:
                 else:
                     shield = False
                     bad_list[i].respawn()
+            elif bad_list[i].am == "gold":
+                del bad_list[i]
+                create_bad(1)
             else:              
                 bad_list[i].respawn()
                 score_value += 1 
