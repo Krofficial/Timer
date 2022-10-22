@@ -407,7 +407,7 @@ def slot_spin():
             bad_limit += 1
             create_bad(1)
         elif slot == 3:
-            if bad_limit >= 3:
+            if bad_limit > 3:
                 bad_limit -= 1
                 no_bad = True
                 bad_list[random.randrange(len(bad_list))].respawn()
