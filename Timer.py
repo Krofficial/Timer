@@ -1,4 +1,5 @@
 import random
+from socket import gaierror
 import pygame
 
 # Define some colors
@@ -452,6 +453,9 @@ bad_list = []
 bomb_limit = 1
 bad_limit = 4
 special = 0
+special_chance1 = 3
+special_chance2 = 5
+special_chance3 = 9
 type = 0
 
 def create_bad(number):
@@ -460,14 +464,17 @@ def create_bad(number):
     global special
     global type
     global score_value
+    global special_chance1
+    global special_chance2
+    global special_chance3
 
 
     if score_value >= 200:
-        special = random.randrange(1,4)
+        special = random.randrange(1,special_chance1)
     elif score_value >= 100:
-        special = random.randrange(1,7)
+        special = random.randrange(1,special_chance2)
     else:
-        special = random.randrange(1,11)
+        special = random.randrange(1,special_chance3)
 
     for i in range(number):
         if len(bad_list) <= bad_limit:
@@ -477,51 +484,51 @@ def create_bad(number):
                     baddy3 = Gold_Bad()
                     bad_list.append(baddy3)
                     if score_value >= 200:
-                        special = random.randrange(1,4)
+                        special = random.randrange(1,special_chance1)
                     elif score_value >= 100:
-                        special = random.randrange(1,7)
+                        special = random.randrange(1,special_chance2)
                     else:
-                        special = random.randrange(1,11)
+                        special = random.randrange(1,special_chance3)
 
                 elif type == 2:
                     baddy4 = Armoured_bad()
                     bad_list.append(baddy4)
                     if score_value >= 200:
-                        special = random.randrange(1,4)
+                        special = random.randrange(1,special_chance1)
                     elif score_value >= 100:
-                        special = random.randrange(1,7)
+                        special = random.randrange(1,special_chance2)
                     else:
-                        special = random.randrange(1,11)
+                        special = random.randrange(1,special_chance3)
 
                 elif type == 3:
                     baddy5 = Vortex_bad()
                     bad_list.append(baddy5)
                     if score_value >= 200:
-                        special = random.randrange(1,4)
+                        special = random.randrange(1,special_chance1)
                     elif score_value >= 100:
-                        special = random.randrange(1,7)
+                        special = random.randrange(1,special_chance2)
                     else:
-                        special = random.randrange(1,11) 
+                        special = random.randrange(1,special_chance3) 
 
                 elif type == 4:
                     baddy6 = Theif_bad()
                     bad_list.append(baddy6)
                     if score_value >= 200:
-                        special = random.randrange(1,4)
+                        special = random.randrange(1,special_chance1)
                     elif score_value >= 100:
-                        special = random.randrange(1,7)
+                        special = random.randrange(1,special_chance2)
                     else:
-                        special = random.randrange(1,11) 
+                        special = random.randrange(1,special_chance3) 
 
                 elif type == 5:
                     baddy7 = Scorer_bad()
                     bad_list.append(baddy7)
                     if score_value >= 200:
-                        special = random.randrange(1,4)
+                        special = random.randrange(1,special_chance1)
                     elif score_value >= 100:
-                        special = random.randrange(1,7)
+                        special = random.randrange(1,special_chance2)
                     else:
-                        special = random.randrange(1,11)
+                        special = random.randrange(1,special_chance3)
 
             else:
                 baddy = Bad()
@@ -552,6 +559,7 @@ pygame.display.set_caption("Timer")
  
 # Loop until the user clicks the close button.
 done = False
+game_over = False
 pressed = False
 pressed2 = False
 pressed3 = False
@@ -564,6 +572,9 @@ shield = False
 font2 = pygame.font.SysFont('Calibri', 40, True, False)
 text = font2.render("$",True,WHITE)
 text2 = font.render("$",True,YELLOW)
+text3 = font.render("GAME OVER!",True,RED)
+text4 = font2.render("press space to restart",True,WHITE)
+text5 = font2.render("YOUR FINAL SCORE WAS:",True,RED)
 
  
 # Used to manage how fast the screen updates
@@ -577,273 +588,300 @@ while not done:
             done = True
  
     # --- Game logic should go here
-    keys = pygame.key.get_pressed()
-    no_bad = False
+    if game_over == False:
+        keys = pygame.key.get_pressed()
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        no_bad = False
 
-    if keys[pygame.K_UP]:
-        if pressed == True:
-            triangle_direction = 1
-        pressed = False
+        if keys[pygame.K_UP]:
+            if pressed == True:
+                triangle_direction = 1
+            pressed = False
 
-    if not keys[pygame.K_UP]:
-        if pressed == False:
-            pressed = True
+        if not keys[pygame.K_UP]:
+            if pressed == False:
+                pressed = True
 
-    if keys[pygame.K_LEFT]:
-        if pressed2 == True:
-            triangle_direction = 2
-        pressed2 = False
+        if keys[pygame.K_LEFT]:
+            if pressed2 == True:
+                triangle_direction = 2
+            pressed2 = False
 
-    if not keys[pygame.K_LEFT]:
-        if pressed2 == False:
-            pressed2 = True
+        if not keys[pygame.K_LEFT]:
+            if pressed2 == False:
+                pressed2 = True
 
-    if keys[pygame.K_DOWN]:
-        if pressed3 == True:
-            triangle_direction = 3
-        pressed3 = False
+        if keys[pygame.K_DOWN]:
+            if pressed3 == True:
+                triangle_direction = 3
+            pressed3 = False
 
-    if not keys[pygame.K_DOWN]:
-        if pressed3 == False:
-            pressed3 = True
+        if not keys[pygame.K_DOWN]:
+            if pressed3 == False:
+                pressed3 = True
 
-    if keys[pygame.K_RIGHT]:
-        if pressed4 == True:
-            triangle_direction = 4
-        pressed4 = False
+        if keys[pygame.K_RIGHT]:
+            if pressed4 == True:
+                triangle_direction = 4
+            pressed4 = False
 
-    if not keys[pygame.K_RIGHT]:
-        if pressed4 == False:
-            pressed4 = True
+        if not keys[pygame.K_RIGHT]:
+            if pressed4 == False:
+                pressed4 = True
 
-    if keys[pygame.K_w]:
-        if pressed == True:
-            triangle_direction = 1
-        pressed = False
+        if keys[pygame.K_w]:
+            if pressed == True:
+                triangle_direction = 1
+            pressed = False
 
-    if not keys[pygame.K_w]:
-        if pressed == False:
-            pressed = True
+        if not keys[pygame.K_w]:
+            if pressed == False:
+                pressed = True
 
-    if keys[pygame.K_a]:
-        if pressed2 == True:
-            triangle_direction = 2
-        pressed2 = False
+        if keys[pygame.K_a]:
+            if pressed2 == True:
+                triangle_direction = 2
+            pressed2 = False
 
-    if not keys[pygame.K_a]:
-        if pressed2 == False:
-            pressed2 = True
+        if not keys[pygame.K_a]:
+            if pressed2 == False:
+                pressed2 = True
 
-    if keys[pygame.K_s]:
-        if pressed3 == True:
-            triangle_direction = 3
-        pressed3 = False
+        if keys[pygame.K_s]:
+            if pressed3 == True:
+                triangle_direction = 3
+            pressed3 = False
 
-    if not keys[pygame.K_s]:
-        if pressed3 == False:
-            pressed3 = True
+        if not keys[pygame.K_s]:
+            if pressed3 == False:
+                pressed3 = True
 
-    if keys[pygame.K_d]:
-        if pressed4 == True:
-            triangle_direction = 4
-        pressed4 = False
+        if keys[pygame.K_d]:
+            if pressed4 == True:
+                triangle_direction = 4
+            pressed4 = False
 
-    if not keys[pygame.K_d]:
-        if pressed4 == False:
-            pressed4 = True
+        if not keys[pygame.K_d]:
+            if pressed4 == False:
+                pressed4 = True
 
-    if keys[pygame.K_SPACE]:
-        if pressed5 == True:
-            if shockwave > 0:
-                for i in range(len(bad_list)):
-                    bad_list[i].respawn()
-                shockwave -= 1
-                
-                if len(bad_list) >= 2:
-                    bad_list = []
-                    create_bad(2)
-                else:
-                    bad_list = []
-                    create_bad(1)
-        pressed5 = False
+        if keys[pygame.K_SPACE]:
+            if pressed5 == True:
+                if shockwave > 0:
+                    for i in range(len(bad_list)):
+                        bad_list[i].respawn()
+                    shockwave -= 1
+                    
+                    if len(bad_list) >= 2:
+                        bad_list = []
+                        create_bad(2)
+                    else:
+                        bad_list = []
+                        create_bad(1)
+            pressed5 = False
 
-    if not keys[pygame.K_SPACE]:
-        if pressed5 == False:
-            pressed5 = True
+        if not keys[pygame.K_SPACE]:
+            if pressed5 == False:
+                pressed5 = True
 
-    if keys[pygame.K_e]:
-        if pressed6 == True:
-            slot_spin()
-        pressed6 = False
+        if keys[pygame.K_e]:
+            if pressed6 == True:
+                slot_spin()
+            pressed6 = False
 
-    if not keys[pygame.K_e]:
-        if pressed6 == False:
-            pressed6 = True
+        if not keys[pygame.K_e]:
+            if pressed6 == False:
+                pressed6 = True
 
-    screen.fill(BLACK)
- 
-    # --- Drawing code should go here
-    draw_player(screen, triangle_direction)
-    draw_healthbar(screen, player_health_bar, player_health)
-    draw_charge_bar(screen, shockwave)
-    draw_slot(screen)
-    screen.blit(text2, [coin_x + 90, coin_y])
-    screen.blit(text, [175, cost_y])
-
-    for i in range (len(bad_list)):
-        bad_list[i].draw(screen)
-        bad_list[i].move()
-
-        if detect_hitbox(bad_list[i].x, bad_list[i].y, bad_list[i].size_x, point_x, point_y, bad_list, triangle_direction):
-            if bad_list[i].am == "bomb":
-                if shield == False:
-                    bad_list[i].respawn()
-                    player_health -= 1
-                    if player_health <= 0:
-                        done = True
-                        print("Your final score was:", score_value)
-                else:
-                    shield = False
-                    bad_list[i].respawn()
-
-            elif bad_list[i].am == "gold":
-                score_value += 1 
-                score_counter += 1
-                coin_value += bad_list[i].coin
-                del bad_list[i]
-                create_bad(1)
-                if score_counter >= 50:
-                    bad_limit += 1
-                    score_counter = 0
-
-            elif bad_list[i].am == "vortex":
-                score_value += 1 
-                score_counter += 1
-                coin_value += bad_list[i].coin
-                del bad_list[i]
-                create_bad(1)
-                if score_counter >= 50:
-                    bad_limit += 1
-                    score_counter = 0
-
-            elif bad_list[i].am == "theif":
-                score_value += 1 
-                score_counter += 1
-                coin_value += bad_list[i].coin
-                del bad_list[i]
-                create_bad(1)
-                if score_counter >= 50:
-                    bad_limit += 1
-                    score_counter = 0
-
-            elif bad_list[i].am == "scorer":
-                score_value += 1 
-                score_counter += 1
-                coin_value += bad_list[i].coin
-                del bad_list[i]
-                create_bad(1)
-                if score_counter >= 50:
-                    bad_limit += 1
-                    score_counter = 0
-
-            elif bad_list[i].am == "armoured":
-                del bad_list[i]
-                create_bad(1)
-                player_health -= 1
-                if player_health <= 0:
-                    done = True
-                    print("Your final score was:", score_value)
-
-            else:              
-                bad_list[i].respawn()
-                score_value += 1 
-                coin_value += bad_list[i].coin
-                if score_counter >= 50:
-                    bad_limit += 1
-                    score_counter = 0      
-
-        if detect_hitbox_end(bad_list[i].x, bad_list[i].y, bad_list[i].size_x, 400, 400, bad_list, triangle_direction):
-            if bad_list[i].am == "bomb":
-                bad_list[i].respawn()
-                score_value += 1 
-                coin_value += bad_list[i].coin 
-                if score_counter >= 50:
-                    bad_limit += 1
-                    score_counter = 0 
-
-            elif bad_list[i].am == "armoured":
-                if shield == False:  
-                    del bad_list[i]
-                    create_bad(1)
-                    player_health -= 1
-                    if player_health <= 0:
-                        done = True
-                        print("Your final score was:", score_value)
-                else:
-                    shield = False
-                    del bad_list[i]
-                    create_bad(1)
-
-            elif bad_list[i].am == "vortex":
-                if shield == False: 
-                    del bad_list[i]
-                    create_bad(1)
-                    player_health -= 3
-                    if player_health <= 0:
-                        done = True
-                        print("Your final score was:", score_value)
-                else:
-                    shield = False
-                    del bad_list[i]
-                    create_bad(1)  
-
-            elif bad_list[i].am == "theif": 
-                if shield == False: 
-                    del bad_list[i]
-                    create_bad(1)
-                    coin_value -= random.randrange(5,46)
-                else:
-                    shield = False
-                    del bad_list[i]
-                    create_bad(1)
-
-            elif bad_list[i].am == "scorer": 
-                if shield == False: 
-                    del bad_list[i]
-                    create_bad(1)
-                    score_value -= random.randrange(5,16)
-                else:
-                    shield = False
-                    del bad_list[i]
-                    create_bad(1)
-
-            elif bad_list[i].am == "gold":
-                if shield == False:
-                    del bad_list[i]
-                    create_bad(1)
-                    player_health -= 1
-                    if player_health <= 0:
-                        done = True
-                        print("Your final score was:", score_value)
-                else:
-                    shield = False
-                    del bad_list[i]
-                    create_bad(1)                                          
-            else:
-                if shield == False:
-                    bad_list[i].respawn()
-                    player_health -= 1
-                    if player_health <= 0:
-                        done = True
-                        print("Your final score was:", score_value)
-                else:
-                    shield = False
-                    bad_list[i].respawn()
-
+        screen.fill(BLACK)
     
-    show_score(text_x, text_y)
-    show_coins(coin_x, coin_y)
-    show_cost(cost_x, cost_y)
+        # --- Drawing code should go here
+        draw_player(screen, triangle_direction)
+        draw_healthbar(screen, player_health_bar, player_health)
+        draw_charge_bar(screen, shockwave)
+        draw_slot(screen)
+        screen.blit(text2, [coin_x + 90, coin_y])
+        screen.blit(text, [175, cost_y])
+
+        for i in range (len(bad_list)):
+            bad_list[i].draw(screen)
+            bad_list[i].move()
+
+            if detect_hitbox(bad_list[i].x, bad_list[i].y, bad_list[i].size_x, point_x, point_y, bad_list, triangle_direction):
+                if bad_list[i].am == "bomb":
+                    if shield == False:
+                        bad_list[i].respawn()
+                        player_health -= 1
+                        if player_health <= 0:
+                            game_over = True
+                            print("Your final score was:", score_value)
+                    else:
+                        shield = False
+                        bad_list[i].respawn()
+
+                elif bad_list[i].am == "gold":
+                    score_value += 1 
+                    score_counter += 1
+                    coin_value += bad_list[i].coin
+                    del bad_list[i]
+                    create_bad(1)
+                    if score_counter >= 50:
+                        bad_limit += 1
+                        score_counter = 0
+
+                elif bad_list[i].am == "vortex":
+                    score_value += 1 
+                    score_counter += 1
+                    coin_value += bad_list[i].coin
+                    del bad_list[i]
+                    create_bad(1)
+                    if score_counter >= 50:
+                        bad_limit += 1
+                        score_counter = 0
+
+                elif bad_list[i].am == "theif":
+                    score_value += 1 
+                    score_counter += 1
+                    coin_value += bad_list[i].coin
+                    del bad_list[i]
+                    create_bad(1)
+                    if score_counter >= 50:
+                        bad_limit += 1
+                        score_counter = 0
+
+                elif bad_list[i].am == "scorer":
+                    score_value += 1 
+                    score_counter += 1
+                    coin_value += bad_list[i].coin
+                    del bad_list[i]
+                    create_bad(1)
+                    if score_counter >= 50:
+                        bad_limit += 1
+                        score_counter = 0
+
+                elif bad_list[i].am == "armoured":
+                    del bad_list[i]
+                    create_bad(1)
+                    player_health -= 1
+                    if player_health <= 0:
+                        game_over = True
+                        print("Your final score was:", score_value)
+
+                else:              
+                    bad_list[i].respawn()
+                    score_value += 1 
+                    coin_value += bad_list[i].coin
+                    if score_counter >= 50:
+                        bad_limit += 1
+                        score_counter = 0      
+
+            if detect_hitbox_end(bad_list[i].x, bad_list[i].y, bad_list[i].size_x, 400, 400, bad_list, triangle_direction):
+                if bad_list[i].am == "bomb":
+                    bad_list[i].respawn()
+                    score_value += 1 
+                    coin_value += bad_list[i].coin 
+                    if score_counter >= 50:
+                        bad_limit += 1
+                        score_counter = 0 
+
+                elif bad_list[i].am == "armoured":
+                    if shield == False:  
+                        del bad_list[i]
+                        create_bad(1)
+                        player_health -= 1
+                        if player_health <= 0:
+                            game_over = True
+                            print("Your final score was:", score_value)
+                    else:
+                        shield = False
+                        del bad_list[i]
+                        create_bad(1)
+
+                elif bad_list[i].am == "vortex":
+                    if shield == False: 
+                        del bad_list[i]
+                        create_bad(1)
+                        player_health -= 3
+                        if player_health <= 0:
+                            game_over = True
+                            print("Your final score was:", score_value)
+                    else:
+                        shield = False
+                        del bad_list[i]
+                        create_bad(1)  
+
+                elif bad_list[i].am == "theif": 
+                    if shield == False: 
+                        del bad_list[i]
+                        create_bad(1)
+                        coin_value -= random.randrange(5,46)
+                    else:
+                        shield = False
+                        del bad_list[i]
+                        create_bad(1)
+
+                elif bad_list[i].am == "scorer": 
+                    if shield == False: 
+                        del bad_list[i]
+                        create_bad(1)
+                        score_value -= random.randrange(5,16)
+                    else:
+                        shield = False
+                        del bad_list[i]
+                        create_bad(1)
+
+                elif bad_list[i].am == "gold":
+                    if shield == False:
+                        del bad_list[i]
+                        create_bad(1)
+                        player_health -= 1
+                        if player_health <= 0:
+                            game_over = True
+                            print("Your final score was:", score_value)
+                    else:
+                        shield = False
+                        del bad_list[i]
+                        create_bad(1)                                          
+                else:
+                    if shield == False:
+                        bad_list[i].respawn()
+                        player_health -= 1
+                        if player_health <= 0:
+                            game_over = True
+                            print("Your final score was:", score_value)
+                    else:
+                        shield = False
+                        bad_list[i].respawn()
+
+        
+        show_score(text_x, text_y)
+        show_coins(coin_x, coin_y)
+        show_cost(cost_x, cost_y)
+
+    else:
+        screen.fill(BLACK)
+        screen.blit(text3, [210, cost_y])
+        screen.blit(text5, [170, 400])
+        screen.blit(text4, [200, 600])
+        show_score(600, 395)
+
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_SPACE]:
+            if pressed5 == True:
+                game_over = False
+                player_health = 3
+                shockwave = 3
+                coin_value = 0
+                score_value = 0
+                bad_list = []
+                create_bad(1)
+                cost_value = random.randrange(70,131)
+            pressed5 = False
+
+        if not keys[pygame.K_SPACE]:
+            if pressed5 == False:
+                pressed5 = True 
 
     # --- Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
