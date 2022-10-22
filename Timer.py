@@ -407,7 +407,7 @@ def slot_spin():
             bad_limit += 1
             create_bad(1)
         elif slot == 3:
-            if bad_limit > 0:
+            if bad_limit >= 3:
                 bad_limit -= 1
                 no_bad = True
                 bad_list[random.randrange(len(bad_list))].respawn()
@@ -548,17 +548,16 @@ def draw_charge_bar(screen, amount):
         pygame.draw.rect(screen, GREEN, [170, 675, 25, 100], 0)
         pygame.draw.rect(screen, WHITE, [170, 675, 25, 100], 5)
 
-create_bad(1)
-
 # Set the width and height of the screen [width, height]
 size = (800, 800)
 screen = pygame.display.set_mode(size)
  
 pygame.display.set_caption("Timer")
+
+game_over = 0
  
 # Loop until the user clicks the close button.
 done = False
-game_over = False
 pressed = False
 pressed2 = False
 pressed3 = False
@@ -569,12 +568,27 @@ mouse_clicked = False
 shield = False
 
 font2 = pygame.font.SysFont('Calibri', 40, True, False)
+font3 = pygame.font.SysFont('Calibri', 80, True, False)
+
 text = font2.render("$",True,WHITE)
 text2 = font.render("$",True,YELLOW)
 text3 = font.render("GAME OVER!",True,RED)
-text4 = font2.render("press space to restart",True,WHITE)
+text4 = font2.render("Restart",True,WHITE)
 text5 = font2.render("YOUR FINAL SCORE WAS:",True,RED)
-
+text6 = font3.render("TIMER",True,WHITE)
+text7 = font2.render("Play",True,WHITE)
+text8 = font2.render("?",True,BLACK)
+text9 = font2.render("Quit",True,WHITE)
+text10 = font2.render("Menu",True,WHITE)
+text11 = font2.render("Welcome to Timer. Your goal is to pertect the",True,WHITE)
+text12 = font2.render("yellow square by pointing the red triangle in",True,WHITE)
+text13 = font2.render("direction of incoming squares. You do this by",True,WHITE)
+text14 = font2.render("using the arrow keys or wasd. If things get",True,WHITE)
+text15 = font2.render("too dicey, press the space bar to get rid of",True,WHITE)
+text16 = font2.render("all enemies. Once you have enough money,",True,WHITE)
+text17 = font2.render("press e to test your luck and buy a random event.",True,WHITE)
+text18 = font2.render("NOTE: Not all enemies are created equally so",True,RED)
+text19 = font2.render("the same trick wont work on all of them.",True,RED)
  
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
@@ -587,9 +601,43 @@ while not done:
             done = True
  
     # --- Game logic should go here
-    if game_over == False:
-        keys = pygame.key.get_pressed()
+    if game_over == 0:
         mouse_x, mouse_y = pygame.mouse.get_pos()
+        pygame.mouse.set_visible(1)
+
+        screen.fill(BLACK)
+        screen.blit(text6, [290, 200])  
+        pygame.draw.rect(screen, RED, (280, 400, 240, 100))
+        pygame.draw.rect(screen, RED, (280, 600, 240, 100))
+        pygame.draw.rect(screen, WHITE, (750, 0, 50, 50))
+        screen.blit(text7, [360, 425])
+        screen.blit(text8, [765, 10])
+        screen.blit(text9, [360, 625])
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if mouse_clicked == False:
+                if mouse_x >= 280 and mouse_x <= 620 and mouse_y >= 400 and mouse_y <= 500:
+                    game_over = 1
+                    slot = -1
+                    bad_list = []
+                    create_bad(1)
+
+                if mouse_x >= 280 and mouse_x <= 620 and mouse_y >= 600 and mouse_y <= 700:
+                    done = True
+
+                if mouse_x >= 750 and mouse_x <= 800 and mouse_y >= 0 and mouse_y <= 50:
+                    game_over = 3
+
+            mouse_clicked = True
+        
+        if event.type == pygame.MOUSEBUTTONUP:
+            if mouse_clicked == True:
+                mouse_clicked = False
+
+
+    elif game_over == 1:
+        pygame.mouse.set_visible(0)
+        keys = pygame.key.get_pressed()
         no_bad = False
 
         if keys[pygame.K_UP]:
@@ -712,7 +760,7 @@ while not done:
                         bad_list[i].respawn()
                         player_health -= 1
                         if player_health <= 0:
-                            game_over = True
+                            game_over = 2
                             print("Your final score was:", score_value)
                     else:
                         shield = False
@@ -726,6 +774,7 @@ while not done:
                     create_bad(1)
                     if score_counter >= 50:
                         bad_limit += 1
+                        create_bad(1)
                         score_counter = 0
 
                 elif bad_list[i].am == "vortex":
@@ -736,6 +785,7 @@ while not done:
                     create_bad(1)
                     if score_counter >= 50:
                         bad_limit += 1
+                        create_bad(1)
                         score_counter = 0
 
                 elif bad_list[i].am == "theif":
@@ -746,6 +796,7 @@ while not done:
                     create_bad(1)
                     if score_counter >= 50:
                         bad_limit += 1
+                        create_bad(1)
                         score_counter = 0
 
                 elif bad_list[i].am == "scorer":
@@ -756,6 +807,7 @@ while not done:
                     create_bad(1)
                     if score_counter >= 50:
                         bad_limit += 1
+                        create_bad(1)
                         score_counter = 0
 
                 elif bad_list[i].am == "armoured":
@@ -763,24 +815,28 @@ while not done:
                     create_bad(1)
                     player_health -= 1
                     if player_health <= 0:
-                        game_over = True
+                        game_over = 2
                         print("Your final score was:", score_value)
 
                 else:              
                     bad_list[i].respawn()
                     score_value += 1 
+                    score_counter += 1
                     coin_value += bad_list[i].coin
                     if score_counter >= 50:
                         bad_limit += 1
+                        create_bad(1)
                         score_counter = 0      
 
             if detect_hitbox_end(bad_list[i].x, bad_list[i].y, bad_list[i].size_x, 400, 400, bad_list, triangle_direction):
                 if bad_list[i].am == "bomb":
                     bad_list[i].respawn()
-                    score_value += 1 
+                    score_value += 1
+                    score_counter += 1
                     coin_value += bad_list[i].coin 
                     if score_counter >= 50:
                         bad_limit += 1
+                        create_bad(1)
                         score_counter = 0 
 
                 elif bad_list[i].am == "armoured":
@@ -789,7 +845,7 @@ while not done:
                         create_bad(1)
                         player_health -= 1
                         if player_health <= 0:
-                            game_over = True
+                            game_over = 2
                             print("Your final score was:", score_value)
                     else:
                         shield = False
@@ -802,7 +858,7 @@ while not done:
                         create_bad(1)
                         player_health -= 3
                         if player_health <= 0:
-                            game_over = True
+                            game_over = 2
                             print("Your final score was:", score_value)
                     else:
                         shield = False
@@ -835,7 +891,7 @@ while not done:
                         create_bad(1)
                         player_health -= 1
                         if player_health <= 0:
-                            game_over = True
+                            game_over = 2
                             print("Your final score was:", score_value)
                     else:
                         shield = False
@@ -846,7 +902,7 @@ while not done:
                         bad_list[i].respawn()
                         player_health -= 1
                         if player_health <= 0:
-                            game_over = True
+                            game_over = 2
                             print("Your final score was:", score_value)
                     else:
                         shield = False
@@ -857,30 +913,73 @@ while not done:
         show_coins(coin_x, coin_y)
         show_cost(cost_x, cost_y)
 
-    else:
+    elif game_over == 2:
+        pygame.mouse.set_visible(1)
+        mouse_x, mouse_y = pygame.mouse.get_pos()
         screen.fill(BLACK)
-        screen.blit(text3, [210, cost_y])
-        screen.blit(text5, [170, 400])
-        screen.blit(text4, [200, 600])
-        show_score(600, 395)
 
-        keys = pygame.key.get_pressed()
+        screen.blit(text3, [230, 200])  
+        pygame.draw.rect(screen, RED, (40, 400, 240, 100))
+        pygame.draw.rect(screen, RED, (500, 400, 240, 100))
+        screen.blit(text4, [90, 430])
+        screen.blit(text5, [150, 300])
+        screen.blit(text10, [570, 430])
+        show_score(580, 295)
 
-        if keys[pygame.K_SPACE]:
-            if pressed5 == True:
-                game_over = False
-                player_health = 3
-                shockwave = 3
-                coin_value = 0
-                score_value = 0
-                bad_list = []
-                create_bad(1)
-                cost_value = random.randrange(70,131)
-            pressed5 = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if mouse_clicked == False:
+                if mouse_x >= 40 and mouse_x <= 280 and mouse_y >= 400 and mouse_y <= 500:
+                    game_over = 1
+                    player_health = 3
+                    shockwave = 3
+                    score_value = 0
+                    score_counter = 0
+                    coin_value = 0
+                    cost_value = random.randrange(70,131)
+                    slot = -1
+                    bad_list = []
+                    create_bad(1)
 
-        if not keys[pygame.K_SPACE]:
-            if pressed5 == False:
-                pressed5 = True 
+                if mouse_x >= 500 and mouse_x <= 740 and mouse_y >= 400 and mouse_y <= 500:
+                    game_over = 0
+                    player_health = 3
+                    shockwave = 3
+                    score_value = 0
+                    score_counter = 0
+                    coin_value = 0
+                    cost_value = random.randrange(70,131)
+
+            mouse_clicked = True
+        
+        if event.type == pygame.MOUSEBUTTONUP:
+            if mouse_clicked == True:
+                mouse_clicked = False       
+
+    elif game_over == 3:
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        screen.fill(BLACK)
+        pygame.draw.rect(screen, RED, (0, 750, 100, 50))
+        screen.blit(text10, [0, 755])
+        screen.blit(text11, [0, 0])
+        screen.blit(text12, [0, 50])
+        screen.blit(text13, [0, 100])
+        screen.blit(text14, [0, 150])
+        screen.blit(text15, [0, 200])
+        screen.blit(text16, [0, 250])
+        screen.blit(text17, [0, 300])
+        screen.blit(text18, [0, 500])
+        screen.blit(text19, [0, 550])
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if mouse_clicked == False:
+                if mouse_x >= 0 and mouse_x <= 100 and mouse_y >= 750 and mouse_y <= 800:
+                    game_over = 0
+
+            mouse_clicked = True
+        
+        if event.type == pygame.MOUSEBUTTONUP:
+            if mouse_clicked == True:
+                mouse_clicked = False 
 
     # --- Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
