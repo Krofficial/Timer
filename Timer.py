@@ -1,5 +1,4 @@
 import random
-from socket import gaierror
 import pygame
 
 # Define some colors
